@@ -1,0 +1,177 @@
+body { 
+    font-family: 'Poppins', sans-serif; 
+    background: #f5f7fa; 
+}
+
+.hero {
+    background: url('/sisperlenteng/assets/img/sawah.jfif') center/cover no-repeat;
+    padding:120px 20px;
+    color:white;
+    text-align:center;
+    position:relative;
+    border-bottom-left-radius:60px;
+    border-bottom-right-radius:60px;
+}
+
+.hero::after {
+    content:'';
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,0.4);
+    border-bottom-left-radius:60px;
+    border-bottom-right-radius:60px;
+}
+
+.hero-content {
+    position:relative;
+    z-index:3;
+}
+
+
+.stats-box { 
+    background:white; 
+    border-radius:15px; 
+    padding:20px; 
+    text-align:center; 
+    box-shadow:0 2px 8px rgba(0,0,0,0.1); 
+}
+
+.hasil-card img { 
+    height:200px; 
+    object-fit:cover; 
+    border-top-left-radius:15px; 
+    border-top-right-radius:15px; 
+}
+
+/* ===== Login Page Style ===== */
+
+#login-page {
+    background: #f1f5f9;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#login-page .login-container {
+    width: 100%;
+    max-width: 420px;
+    padding: 20px;
+}
+
+#login-page .login-card {
+    background: #ffffff;
+    padding: 35px 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    animation: fadeIn .4s ease;
+}
+
+#login-page .title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+#login-page .form-group {
+    margin-bottom: 18px;
+}
+
+#login-page .btn-login {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: #2563eb;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+#login-page .btn-login:hover {
+    background: #1d4ed8;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== REGISTER PAGE ===== */
+
+#register-page {
+    background: #f1f5f9;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#register-page .register-container {
+    width: 100%;
+    max-width: 480px;
+    padding: 20px;
+}
+
+#register-page .register-card {
+    background: #ffffff;
+    padding: 35px 30px;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    animation: fadeIn .4s ease;
+}
+
+#register-page .title {
+    text-align: center;
+    font-weight: 700;
+    font-size: 24px;
+    color: #1e293b;
+}
+
+#register-page .subtitle {
+    text-align: center;
+    color: #64748b;
+    margin-top: -5px;
+    margin-bottom: 20px;
+}
+
+#register-page .form-group {
+    margin-bottom: 18px;
+}
+
+#register-page .btn-register {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: #16a34a;
+    color: white;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+#register-page .btn-register:hover {
+    background: #15803d;
+}
+
+#register-page .login-link {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 14px;
+}
+
+#register-page .login-link a {
+    color: #2563eb;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+#register-page .login-link a:hover {
+    text-decoration: underline;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}

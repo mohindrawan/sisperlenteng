@@ -1,0 +1,1 @@
+Letakkan file gambar komoditas di folder ini. Files uploaded by kelompok akan be stored here.
