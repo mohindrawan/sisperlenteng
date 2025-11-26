@@ -34,6 +34,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'creat
     exit;
 }
 
+// Handle update action (dari modal edit)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'update') {
+    $id = (int)($_POST['id'] ?? 0);
+    $nama = trim($_POST['nama'] ?? '');
+    if ($id <= 0) {
+        $_SESSION['flash_error'] = 'ID desa tidak valid.';
+    } elseif ($nama === '') {
+        $_SESSION['flash_error'] = 'Nama desa wajib diisi.';
+    } else {
+        try {
+            $chk = $pdo->prepare('SELECT COUNT(*) FROM desa WHERE LOWER(nama)=LOWER(?) AND id_desa <> ?');
+            $chk->execute([$nama, $id]);
+            if ($chk->fetchColumn() > 0) {
+                $_SESSION['flash_error'] = 'Nama desa sudah ada.';
+            } else {
+                $upd = $pdo->prepare('UPDATE desa SET nama = ? WHERE id_desa = ?');
+                $upd->execute([$nama, $id]);
+                $_SESSION['flash_success'] = 'Desa berhasil diperbarui.';
+            }
+        } catch (Exception $e) {
+            $_SESSION['flash_error'] = 'Terjadi kesalahan saat menyimpan: ' . $e->getMessage();
+        }
+    }
+    header('Location: /sisperlenteng/admin/desa_list.php');
+    exit;
+}
+
 // Handle delete action
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delete') {
     $id = (int)($_POST['id'] ?? 0);
@@ -95,7 +122,7 @@ include '../partials/header.php';
                                     <td><?= $i + 1 ?></td>
                                     <td><?= htmlspecialchars($d['nama']) ?></td>
                                     <td class="text-end">
-                                        <a href="/sisperlenteng/admin/desa_edit.php?id=<?= (int)$d['id_desa'] ?>" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary btn-edit-desa" data-id="<?= (int)$d['id_desa'] ?>" data-nama="<?= htmlspecialchars($d['nama'], ENT_QUOTES) ?>">Edit</button>
 
                                         <form method="post" action="/sisperlenteng/admin/desa_list.php" class="d-inline-block ms-1 form-delete-desa">
                                             <input type="hidden" name="id" value="<?= (int)$d['id_desa'] ?>">
@@ -138,17 +165,56 @@ include '../partials/header.php';
   </div>
 </div>
 
-<script>
-// konfirmasi sebelum menghapus
-document.addEventListener('submit', function (e) {
-    const form = e.target;
-    if (form.classList.contains('form-delete-desa')) {
-        if (!confirm('Yakin ingin menghapus desa ini? Aksi tidak dapat dibatalkan.')) {
-            e.preventDefault();
-        }
-    }
-});
-</script>
+    <!-- Modal Edit Desa -->
+    <div class="modal fade" id="modalEditDesa" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form method="post" action="/sisperlenteng/admin/desa_list.php">
+                    <input type="hidden" name="action" value="update">
+                    <input type="hidden" name="id" id="editDesaId" value="">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Desa</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="editDesaNama" class="form-label">Nama Desa</label>
+                            <input id="editDesaNama" name="nama" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // konfirmasi sebelum menghapus
+    document.addEventListener('submit', function (e) {
+            const form = e.target;
+            if (form.classList.contains('form-delete-desa')) {
+                    if (!confirm('Yakin ingin menghapus desa ini? Aksi tidak dapat dibatalkan.')) {
+                            e.preventDefault();
+                    }
+            }
+    });
+
+    // buka modal edit dan isi data
+    document.querySelectorAll('.btn-edit-desa').forEach(function(btn){
+            btn.addEventListener('click', function(){
+                    const id = this.getAttribute('data-id');
+                    const nama = this.getAttribute('data-nama');
+                    document.getElementById('editDesaId').value = id;
+                    document.getElementById('editDesaNama').value = nama;
+                    var editModalEl = document.getElementById('modalEditDesa');
+                    var modal = new bootstrap.Modal(editModalEl);
+                    modal.show();
+            });
+    });
+    </script>
 
 <?php include '../partials/footer.php'; ?>
 
