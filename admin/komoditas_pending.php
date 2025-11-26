@@ -25,6 +25,7 @@ $items = $pdo->query("SELECT k.*, u.nama_kelompok FROM komoditas k LEFT JOIN use
       <td><?php echo $it['tanggal_input']; ?></td>
       <td>
         <form method="post" action="/sisperlenteng/admin/komoditas_action.php" style="display:inline-block">
+          <?= csrf_field() ?>
           <input type="hidden" name="id" value="<?php echo (int)$it['id_komoditas']; ?>">
           <button name="action" value="approve" class="btn btn-success btn-sm">Approve</button>
         </form>
@@ -33,7 +34,7 @@ $items = $pdo->query("SELECT k.*, u.nama_kelompok FROM komoditas k LEFT JOIN use
         <div class="modal fade" id="rejectModal<?php echo (int)$it['id_komoditas']; ?>" tabindex="-1">
           <div class="modal-dialog"><div class="modal-content"><form method="post" action="/sisperlenteng/admin/komoditas_action.php">
             <div class="modal-header"><h5 class="modal-title">Alasan Reject</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-            <div class="modal-body"><input type="hidden" name="id" value="<?php echo (int)$it['id_komoditas']; ?>"><textarea name="alasan" class="form-control" required></textarea></div>
+            <div class="modal-body"><?= csrf_field() ?><input type="hidden" name="id" value="<?php echo (int)$it['id_komoditas']; ?>"><textarea name="alasan" class="form-control" required></textarea></div>
             <div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button><button name="action" value="reject" class="btn btn-danger">Kirim</button></div>
           </form></div></div>
         </div>

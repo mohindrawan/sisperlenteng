@@ -17,6 +17,13 @@ if($_SERVER['REQUEST_METHOD'] !== 'POST'){
 $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
 $action = $_POST['action'] ?? '';
 $alasan = trim($_POST['alasan'] ?? '');
+// CSRF validation
+$token = $_POST['_csrf'] ?? '';
+if (!validate_csrf($token)) {
+    $_SESSION['flash_error'] = 'Token CSRF tidak valid.';
+    header('Location: /sisperlenteng/admin/komoditas_pending.php');
+    exit;
+}
 
 if ($id <= 0 || !$action) {
     header('Location: /sisperlenteng/admin/komoditas_pending.php');

@@ -13,6 +13,11 @@ if (!is_admin()) {
 // Handle create action (dari modal)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'create') {
     $nama = trim($_POST['nama'] ?? '');
+    $token = $_POST['_csrf'] ?? '';
+    if (!validate_csrf($token)) {
+        $_SESSION['flash_error'] = 'Token CSRF tidak valid.';
+        header('Location: /sisperlenteng/admin/desa_list.php'); exit;
+    }
     if ($nama === '') {
         $_SESSION['flash_error'] = 'Nama desa wajib diisi.';
     } else {
@@ -38,6 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'creat
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'update') {
     $id = (int)($_POST['id'] ?? 0);
     $nama = trim($_POST['nama'] ?? '');
+    $token = $_POST['_csrf'] ?? '';
+    if (!validate_csrf($token)) {
+        $_SESSION['flash_error'] = 'Token CSRF tidak valid.';
+        header('Location: /sisperlenteng/admin/desa_list.php'); exit;
+    }
     if ($id <= 0) {
         $_SESSION['flash_error'] = 'ID desa tidak valid.';
     } elseif ($nama === '') {
@@ -125,6 +135,7 @@ include '../partials/header.php';
                                         <button type="button" class="btn btn-sm btn-outline-secondary btn-edit-desa" data-id="<?= (int)$d['id_desa'] ?>" data-nama="<?= htmlspecialchars($d['nama'], ENT_QUOTES) ?>">Edit</button>
 
                                         <form method="post" action="/sisperlenteng/admin/desa_list.php" class="d-inline-block ms-1 form-delete-desa">
+                                            <?= csrf_field() ?>
                                             <input type="hidden" name="id" value="<?= (int)$d['id_desa'] ?>">
                                             <input type="hidden" name="action" value="delete">
                                             <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
@@ -144,8 +155,9 @@ include '../partials/header.php';
 <div class="modal fade" id="modalAddDesa" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <form method="post" action="/sisperlenteng/admin/desa_list.php">
-        <input type="hidden" name="action" value="create">
+            <form method="post" action="/sisperlenteng/admin/desa_list.php">
+                <input type="hidden" name="action" value="create">
+                <?= csrf_field() ?>
         <div class="modal-header">
           <h5 class="modal-title">Tambah Desa</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
@@ -171,6 +183,7 @@ include '../partials/header.php';
             <div class="modal-content">
                 <form method="post" action="/sisperlenteng/admin/desa_list.php">
                     <input type="hidden" name="action" value="update">
+                    <?= csrf_field() ?>
                     <input type="hidden" name="id" id="editDesaId" value="">
                     <div class="modal-header">
                         <h5 class="modal-title">Edit Desa</h5>

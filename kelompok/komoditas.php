@@ -11,6 +11,16 @@ include '../partials/header.php';
 $uid = $_SESSION['user']['id'];
 
 if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['nama_komoditas'])){
+    $token = $_POST['_csrf'] ?? '';
+    if (!validate_csrf($token)) {
+        $error_message = 'Token CSRF tidak valid.';
+    } else {
+        // continue below (existing code)
+    }
+    if (!empty($error_message)) {
+        // skip insert if csrf invalid
+    } else {
+        
     $foto = null;
     if (isset($_FILES['foto']) && $_FILES['foto']['error'] === 0) {
         // validasi sederhana
@@ -103,6 +113,7 @@ $desa = $pdo->query('SELECT * FROM desa ORDER BY nama')->fetchAll();
 <hr>
 <h3>Tambah Komoditas</h3>
 <form method="post" enctype="multipart/form-data">
+    <?= csrf_field() ?>
   <div class="mb-3"><label>Nama Komoditas</label><input class="form-control" name="nama_komoditas" required></div>
   <div class="mb-3"><label>Jenis Tanaman</label><input class="form-control" name="jenis_tanaman"></div>
   <div class="mb-3"><label>Stok</label><input class="form-control" name="stok"></div>

@@ -12,6 +12,11 @@ if (!is_admin()) {
 
 // Handle delete
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delete') {
+    $token = $_POST['_csrf'] ?? '';
+    if (!validate_csrf($token)) {
+        $_SESSION['flash_error'] = 'Token CSRF tidak valid.';
+        header('Location: /sisperlenteng/admin/komoditas_manage.php'); exit;
+    }
     $id = (int)($_POST['id'] ?? 0);
     if ($id > 0) {
         try {
@@ -69,6 +74,7 @@ include '../partials/header.php';
                                 <td><?= htmlspecialchars($k['status'] ?? '') ?></td>
                                 <td class="text-end">
                                     <form method="post" action="/sisperlenteng/admin/komoditas_manage.php" class="d-inline-block">
+                                        <?= csrf_field() ?>
                                         <input type="hidden" name="id" value="<?= (int)$k['id_komoditas'] ?>">
                                         <input type="hidden" name="action" value="delete">
                                         <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Hapus komoditas ini?')">Hapus</button>
